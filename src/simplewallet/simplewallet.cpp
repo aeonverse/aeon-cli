@@ -2717,8 +2717,8 @@ simple_wallet::simple_wallet()
                            tr("version"),
                            tr("Returns version information"));
   m_cmd_binder.set_handler("show_qr_code",
-                           boost::bind(&simple_wallet::on_command, this, &simple_wallet::show_qr_code, _1),
-                           tr(USAGE_SHOW_QR_CODE),
+                           boost::bind(&simple_wallet::show_qr_code, this, _1),
+                           tr("show_qr_code [<subaddress_index>]"),
                            tr("Show address as QR code"));
   m_cmd_binder.set_handler("help",
                            boost::bind(&simple_wallet::help, this, _1),
