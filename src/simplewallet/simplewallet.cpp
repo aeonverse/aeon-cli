@@ -1832,7 +1832,7 @@ bool simple_wallet::show_qr_code(const std::vector<std::string> &args)
   WTEXTON();
   try
   {
-    const std::string address = "monero:" + m_wallet->get_subaddress_as_str({m_current_subaddress_account, subaddress_index});
+    const std::string address = "aeon:" + m_wallet->get_subaddress_as_str({m_current_subaddress_account, subaddress_index});
     const qrcodegen::QrCode qr = qrcodegen::QrCode::encodeText(address.c_str(), qrcodegen::QrCode::Ecc::LOW);
     for (int y = -2; y < qr.getSize() + 2; y+=2)
     {
@@ -4832,8 +4832,6 @@ bool simple_wallet::transfer_main(int transfer_type, const std::vector<std::stri
   if (!try_connect_to_daemon())
     return true;
 
-  SCOPED_WALLET_UNLOCK();
-
   std::vector<std::string> local_args = args_;
 
   std::set<uint32_t> subaddr_indices;
@@ -5048,6 +5046,8 @@ bool simple_wallet::transfer_main(int transfer_type, const std::vector<std::stri
        return true; 
      }
   }
+
+  SCOPED_WALLET_UNLOCK();
 
   try
   {
@@ -7349,12 +7349,6 @@ bool simple_wallet::run()
 void simple_wallet::stop()
 {
   m_cmd_binder.stop_handling();
-
-  m_idle_run.store(false, std::memory_order_relaxed);
-  m_wallet->stop();
-  // make the background refresh thread quit
-  boost::unique_lock<boost::mutex> lock(m_idle_mutex);
-  m_idle_cond.notify_one();
 }
 //----------------------------------------------------------------------------------------------------
 bool simple_wallet::account(const std::vector<std::string> &args/* = std::vector<std::string>()*/)
