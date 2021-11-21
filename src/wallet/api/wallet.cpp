@@ -1119,8 +1119,8 @@ bool WalletImpl::exportOutputs(const string &filename, bool all)
 
     try
     {
-        std::string data = m_wallet->export_outputs_to_str(all);
-        bool r = m_wallet->save_to_file(filename, data);
+        std::string data = m_wallet->export_outputs_to_str();
+        bool r = epee::file_io_utils::save_string_to_file(filename, data);
         if (!r)
         {
             LOG_ERROR("Failed to save file " << filename);
@@ -1148,7 +1148,7 @@ bool WalletImpl::importOutputs(const string &filename)
     }
 
     std::string data;
-    bool r = m_wallet->load_from_file(filename, data);
+    bool r = epee::file_io_utils::load_file_to_string(filename, data);
     if (!r)
     {
         LOG_ERROR("Failed to read file: " << filename);
